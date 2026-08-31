@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Student</title>
+    <link href="../src/output.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=more_vert" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Sarabun:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+</head>
+
+<body style="font-family: 'Sarabun', sans-serif;" class=" bg-[#eaf1f8] min-h-screen p-6 md:p-10 relative">
+
+    <!-- User Profile Icon (Top Right) -->
+    <div class="absolute top-4 right-4 md:top-8 md:right-10">
+        <button id="profile-btn"
+            class="bg-[#93c5fd] text-[#1e3a8a] p-2 rounded-full hover:bg-blue-300 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto bg-white rounded-[2rem] shadow-xl overflow-hidden mt-8 min-h-[700px]">
+
+        <!-- Dark Blue Top Bar -->
+        <div class="bg-[#213f8c] h-16 w-full"></div>
+
+        <!-- Header Section -->
+        <div class="pt-12 pb-10 px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-[#213f8c] mb-8">AI Document Format Checker</h1>
+
+            <!-- Create Project Button -->
+            <button id="create-project-btn"
+                class="relative flex items-center justify-center mx-auto w-full max-w-[500px] h-14 bg-[#f1f4f9] rounded-full hover:bg-gray-200 transition-colors group overflow-hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                    stroke="currentColor" class="w-5 h-5 text-gray-600 absolute left-8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                <span class="text-sm font-semibold text-gray-800 z-10">สร้างโครงงาน</span>
+            </button>
+
+        </div>
+
+        <!-- Projects Section -->
+        <div class="px-8 md:px-14 pb-16">
+            <h2 class="text-xl font-bold text-gray-900 mb-6">โครงงานของฉัน</h2>
+
+            <!-- Grid Container -->
+            <div id="project-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+
+                <!-- Empty State (หน้าจอเมื่อยังไม่มีโครงงาน) -->
+                <div class="col-span-full flex flex-col items-center justify-center py-24 px-4 text-center w-full">
+
+                    <!-- ไอคอนโฟลเดอร์ -->
+                    <div
+                        class="w-20 h-20 bg-[#eef2ff] text-[#31307b] rounded-full flex items-center justify-center mb-6 shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-9 h-9">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M3.75 9.776c.112-.017.227-.026.344-.026h15.812c.117 0 .232.009.344.026m-16.5 0a2.25 2.25 0 00-1.883 2.542l.857 6a2.25 2.25 0 002.227 1.932H19.05a2.25 2.25 0 002.227-1.932l.857-6a2.25 2.25 0 00-1.883-2.542m-16.5 0V6A2.25 2.25 0 016 3.75h3.879a1.5 1.5 0 011.06.44l2.122 2.12a1.5 1.5 0 001.06.44H18A2.25 2.25 0 0120.25 9v.776" />
+                        </svg>
+                    </div>
+
+                    <!-- หัวข้อ -->
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">ยังไม่มีโครงงานในระบบ</h3>
+
+                    <!-- รายละเอียด -->
+                    <p class="text-[14px] text-gray-500 max-w-[420px] leading-relaxed text-center">
+                        เริ่มต้นด้วยการสร้างโครงงานแรกของคุณเพื่อจัดเก็บเอกสารและส่ง<br class="hidden sm:block">
+                        ตรวจรูปแบบด้วย AI หรือรอการเชิญเข้าทีมจากเพื่อน
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="project-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+        <div class="w-full max-w-[540px] bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col">
+            
+            <div class="relative flex items-center justify-center px-6 py-4 border-b border-gray-100">
+                <h2 class="text-[16px] font-semibold">สร้างโครงงานใหม่</h2>
+                <!-- เพิ่ม id="close-modal-btn" ให้ปุ่ม X -->
+                <button id="close-modal-btn" class="absolute right-5 text-gray-400 hover:text-gray-600 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#1f1f1f">
+                        <path d="M256-213.85 213.85-256l224-224-224-224L256-746.15l224 224 224-224L746.15-704l-224 224 224 224L704-213.85l-224-224-224 224Z" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="p-8">
+                <form id="create-project-form" class="flex flex-col gap-5">
+                    
+                    <!-- ใส่ id ให้ช่องกรอกทุกช่อง -->
+                    <div>
+                        <label class="block text-[14px] text-gray-700 font-medium mb-2">ชื่อโครงงาน (ภาษาไทย)</label>
+                        <input type="text" id="thai-title" placeholder="เช่น การพัฒนาระบบตรวจสอบรูปแบบเอกสารด้วย AI"
+                            class="w-full border border-gray-200 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#2C5282] focus:border-transparent transition-all"
+                            required>
+                    </div>
+
+                    <div>
+                        <label class="block text-[14px] text-gray-700 font-medium mb-2">ชื่อโครงงาน (ภาษาอังกฤษ)</label>
+                        <input type="text" id="eng-title" placeholder="e.g., Development of AI Document Format Checker System"
+                            class="w-full border border-gray-200 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#2C5282] focus:border-transparent transition-all">
+                    </div>
+
+                    <div>
+                        <label class="block text-[14px] text-gray-700 font-medium mb-2">ปีการศึกษา</label>
+                        <input type="text" id="academic-year"
+                            class="w-full border border-gray-200 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#2C5282] focus:border-transparent transition-all">
+                    </div>
+
+                    <div>
+                        <label class="block text-[14px] text-gray-700 font-medium mb-2">อาจารย์ที่ปรึกษา (อีเมล)</label>
+                        <input type="text" id="advisor-email" placeholder="เช่น teacher@university.ac.th"
+                            class="w-full border border-gray-200 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#2C5282] focus:border-transparent transition-all">
+                    </div>
+
+                    <div>
+                        <label class="block text-[14px] text-gray-700 font-medium mb-2">เพิ่มสมาชิกในทีม(คั่นด้วยเครื่องหมายจุลภาค , )</label>
+                        <input type="text" id="team-emails" placeholder="เช่น student1@mail.com, student2@mail.com"
+                            class="w-full border border-gray-200 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#2C5282] focus:border-transparent transition-all">
+                        <p class="text-xs text-gray-400 mt-1">* หากมีหลายคน ให้พิมพ์ลูกน้ำ (,) คั่นระหว่างอีเมล</p>
+                    </div>
+
+                    <div class="mt-4">
+                        <!-- เปลี่ยนปุ่มเป็น type="submit" และเพิ่ม id -->
+                        <button type="submit" id="submit-project-btn" class="w-full bg-[#2C5282] text-white font-semibold rounded-lg py-3 hover:bg-[#234069]">
+                            สร้างโครงงาน
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="../node_modules/@supabase/supabase-js/dist/umd/supabase.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/supabase.js"></script>
+
+</body>
+
+</html>

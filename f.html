@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบตรวจสอบเอกสารโครงงาน</title>
+    <!-- โหลด Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+    <!-- โครงสร้าง Master-Detail Layout -->
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- 👈 ฝั่งซ้าย: รายชื่อโปรเจกต์ (Master) -->
+        <div class="w-1/3 bg-white border-r border-gray-200 flex flex-col h-full">
+            <h2 class="text-xl font-bold p-5 border-b border-gray-200 bg-gray-100 shadow-sm z-10">
+                📂 โปรเจกต์ของฉัน
+            </h2>
+            <!-- กล่องสำหรับแสดงรายชื่อโปรเจกต์ (JS จะเอาข้อมูลมาใส่ตรงนี้) -->
+            <div id="projectList" class="overflow-y-auto flex-1">
+                <!-- ข้อมูลจะถูกสร้างโดย JavaScript -->
+            </div>
+        </div>
+
+        <!-- 👉 ฝั่งขวา: รายละเอียด (Detail) -->
+        <div class="w-2/3 flex flex-col h-full bg-gray-50">
+            <!-- หัวข้อโปรเจกต์ -->
+            <div class="p-5 border-b border-gray-200 bg-white shadow-sm z-10 h-[73px]">
+                <h2 id="projectNameDisplay" class="text-2xl font-bold text-gray-400">
+                    👈 กรุณาเลือกโปรเจกต์จากเมนูด้านซ้าย
+                </h2>
+            </div>
+
+            <!-- พื้นที่แสดงประวัติและคอมเมนต์ -->
+            <div class="flex-1 p-5 overflow-y-auto flex gap-6 hidden" id="detailArea">
+                
+                <!-- คอลัมน์ซ้าย: ประวัติการส่ง -->
+                <div class="w-1/2 bg-white p-5 rounded-xl shadow-sm border border-gray-100 h-fit">
+                    <h3 class="text-lg font-bold text-gray-700 mb-4 pb-2 border-b flex items-center gap-2">
+                        🕒 ประวัติการส่งตรวจ
+                    </h3>
+                    <div id="historyContent" class="space-y-4">
+                        <!-- ข้อมูลจะถูกสร้างโดย JavaScript -->
+                    </div>
+                </div>
+
+                <!-- คอลัมน์ขวา: คอมเมนต์ -->
+                <div class="w-1/2 bg-white p-5 rounded-xl shadow-sm border border-gray-100 h-fit">
+                    <h3 class="text-lg font-bold text-gray-700 mb-4 pb-2 border-b flex items-center gap-2">
+                        💬 คอมเมนต์ & ข้อเสนอแนะ
+                    </h3>
+                    <div id="commentContent" class="space-y-4">
+                        <!-- ข้อมูลจะถูกสร้างโดย JavaScript -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- 🚀 ส่วนของ JavaScript -->
+    <script>
+        // 1. จำลองข้อมูลจากฐานข้อมูล (Supabase)
+        const mockProjects = [
+            { id: 1, name: "ระบบสั่งอาหารออนไลน์", updated_at: "27 ส.ค. 2026", status: "กำลังแก้", color: "yellow" },
+            { id: 2, name: "เว็บไซต์แนะนำการท่องเที่ยวไทย", updated_at: "15 ก.พ. 2026", status: "ผ่านเกณฑ์", color: "green" }
+        ];
+
+        const mockHistories = {
+            1: [
+                { round: 2, date: "27 ส.ค. 2026", detail: "ส่งตรวจ Draft บทที่ 1-3 (แก้ขอบกระดาษแล้ว)" },
+                { round: 1, date: "20 ส.ค. 2026", detail: "ส่งตรวจ Draft บทที่ 1-3 ครั้งแรก" }
+            ],
+            2: [
+                { round: 1, date: "15 ก.พ. 2026", detail: "ส่งตรวจเอกสารฉบับสมบูรณ์" }
+            ]
+        };
+
+        const mockComments = {
+            1: [
+                { sender: "🤖 AI Checker", text: "ตรวจพบข้อผิดพลาด: ฟอนต์ในหน้าอ้างอิงไม่ใช่ TH SarabunPSK ขนาด 16pt", isError: true },
+                { sender: "👨‍🏫 อาจารย์ที่ปรึกษา", text: "บทที่ 2 ทฤษฎีที่เกี่ยวข้อง อยากให้เพิ่มเรื่อง Tailwind CSS เข้าไปอีกนิดครับ", isError: false }
+            ],
+            2: [
+                { sender: "🤖 AI Checker", text: "ไม่พบข้อผิดพลาดด้านรูปแบบ (ผ่านเกณฑ์ 100%)", isError: false },
+                { sender: "👨‍🏫 อาจารย์ที่ปรึกษา", text: "เอกสารเรียบร้อยดีมากครับ ทำหน้า Landing Page ของภาคเหนือออกมาได้สวยเลย", isError: false }
+            ]
+        };
+
+        // 2. ฟังก์ชันวาดรายชื่อโปรเจกต์ฝั่งซ้าย
+        function renderProjects() {
+            const projectListDiv = document.getElementById('projectList');
+            projectListDiv.innerHTML = ''; // ล้างค่าเก่าก่อน
+
+            mockProjects.forEach(project => {
+                // กำหนดสีของสถานะ
+                const badgeColor = project.color === 'green' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700';
+                
+                // สร้างกล่อง HTML ของแต่ละโปรเจกต์
+                const projectHTML = `
+                    <div class="p-5 border-b border-gray-100 cursor-pointer hover:bg-blue-50 transition duration-200" 
+                         onclick="loadProjectDetails(${project.id}, '${project.name}')">
+                        <h3 class="font-semibold text-gray-800 text-lg">${project.name}</h3>
+                        <p class="text-sm text-gray-500 mt-1">อัปเดตล่าสุด: ${project.updated_at}</p>
+                        <span class="inline-block mt-3 text-xs px-2.5 py-1 ${badgeColor} rounded-full font-medium">
+                            ${project.status}
+                        </span>
+                    </div>
+                `;
+                projectListDiv.innerHTML += projectHTML;
+            });
+        }
+
+        // 3. ฟังก์ชันดึงข้อมูลมาแสดงฝั่งขวา (ทำงานเมื่อถูกคลิก)
+        function loadProjectDetails(projectId, projectName) {
+            // โชว์พื้นที่ฝั่งขวา
+            document.getElementById('detailArea').classList.remove('hidden');
+            
+            // เปลี่ยนชื่อหัวข้อด้านบน
+            const titleDisplay = document.getElementById('projectNameDisplay');
+            titleDisplay.textContent = `📄 ${projectName}`;
+            titleDisplay.classList.remove('text-gray-400');
+            titleDisplay.classList.add('text-gray-800');
+
+            // --- จัดการประวัติ (History) ---
+            const historyDiv = document.getElementById('historyContent');
+            historyDiv.innerHTML = '';
+            const projectHistories = mockHistories[projectId] || [];
+            
+            projectHistories.forEach(hist => {
+                historyDiv.innerHTML += `
+                    <div class="relative pl-4 border-l-2 border-blue-400 pb-4">
+                        <div class="absolute w-3 h-3 bg-blue-500 rounded-full -left-[7px] top-1.5"></div>
+                        <p class="text-sm font-bold text-blue-700">ครั้งที่ ${hist.round} <span class="text-gray-400 font-normal ml-2">${hist.date}</span></p>
+                        <p class="text-sm text-gray-700 mt-1">${hist.detail}</p>
+                    </div>
+                `;
+            });
+
+            // --- จัดการคอมเมนต์ (Comments) ---
+            const commentDiv = document.getElementById('commentContent');
+            commentDiv.innerHTML = '';
+            const projectComments = mockComments[projectId] || [];
+
+            projectComments.forEach(comment => {
+                // ถ้าเป็น AI แจ้ง Error ให้เป็นสีแดง ถ้าเป็นปกติให้เป็นสีฟ้า/เทา
+                const boxStyle = comment.isError ? 'bg-red-50 border-red-200 text-red-800' : 'bg-gray-50 border-gray-200 text-gray-800';
+                
+                commentDiv.innerHTML += `
+                    <div class="p-3 rounded-lg border ${boxStyle}">
+                        <p class="font-semibold text-sm mb-1">${comment.sender}</p>
+                        <p class="text-sm opacity-90 leading-relaxed">${comment.text}</p>
+                    </div>
+                `;
+            });
+        }
+
+        // 4. สั่งให้ทำงานทันทีที่เปิดหน้าเว็บ
+        renderProjects();
+
+    </script>
+</body>
+</html>
